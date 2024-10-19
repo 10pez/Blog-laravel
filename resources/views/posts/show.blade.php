@@ -16,6 +16,16 @@
                 <div class="mb-4 p-4 bg-gray-100 rounded-lg shadow-sm">
                     <p class="text-gray-800">{{ $comment->comment }}</p>
                     <p class="text-sm text-gray-500 mt-2">By: {{ $comment->user ? $comment->user->name : 'Guest' }}</p>
+
+                    @auth
+                        @if(auth()->id() == $comment->user_id || auth()->id() == $post->user_id)
+                            <form action="{{ route('comments.destroy', $comment->id) }}" method="POST" class="mt-2 inline">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:underline">Delete</button>
+                            </form>
+                        @endif
+                    @endauth
                 </div>
             @empty
                 <p class="text-gray-600">No comments yet.</p>
